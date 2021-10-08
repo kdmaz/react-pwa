@@ -1,25 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import { friendTable, useLiveQuery } from "./db";
+import { AddFriendModal } from "./friend/add-friend-modal";
+import { FriendList } from "./friend/friend-list";
 
 function App() {
+  const allFriends = useLiveQuery(() => friendTable.toArray(), []);
+  const [open, setOpen] = useState<boolean>(false);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <button onClick={() => setOpen(true)}>Add Friend</button>
+
+      <FriendList />
+
+      <AddFriendModal open={open} onClose={() => setOpen(false)} />
+    </>
   );
 }
 
