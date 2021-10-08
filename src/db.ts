@@ -1,13 +1,13 @@
 import Dexie from "dexie";
 import { useLiveQuery } from "dexie-react-hooks";
-import { Friend } from "./friend/friend.interface";
+import { PendingFriend } from "./friend/friend.interface";
 
-const db = new Dexie("myDatabase");
+const db = new Dexie("friendsDatabase");
 
 db.version(1).stores({
-  friends: "++id,name,age",
+  pendingFriends: "++id,name,age,requestType",
 });
 
-const friendTable = db.table<Friend>("friends");
+const pendingFriendsTable = db.table<PendingFriend>("pendingFriends");
 
-export { friendTable, useLiveQuery };
+export { pendingFriendsTable, useLiveQuery };

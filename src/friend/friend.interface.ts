@@ -3,3 +3,7 @@ export interface Friend {
   name: string;
   age: number;
 }
+
+export interface PendingFriend extends Friend {
+  requestType: "get" | "post" | "patch" | "delete";
+}

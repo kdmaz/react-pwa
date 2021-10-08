@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { friendTable } from "../db";
+import { pendingFriendsTable } from "../db";
 import { Modal } from "../modal";
 
 interface Props {
@@ -39,9 +39,10 @@ function AddFriendModal({ onClose, open }: Props) {
 
     // offline
     if (false) {
-      await friendTable.put({
+      await pendingFriendsTable.add({
         name: name as string,
         age: +(age as string),
+        requestType: "post",
       });
     }
 
