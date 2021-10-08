@@ -32,13 +32,14 @@ function AddFriendModal({ onClose, open }: Props) {
 
     // online
     if (true) {
-      console.log(
-        `adding friend while online name: (${name}) and age: (${age})`
-      );
-    }
+      const newFriend = await fetch("/api/friends", {
+        method: "POST",
+        body: JSON.stringify({ name, age: +age }),
+      });
 
-    // offline
-    if (false) {
+      // friendProvider setFriends -> newFriend
+    } else {
+      // offline
       await pendingFriendsTable.add({
         name: name as string,
         age: +(age as string),
