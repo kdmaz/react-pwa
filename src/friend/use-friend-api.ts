@@ -72,12 +72,17 @@ function useUpdateFriend(): (friend: Friend) => Promise<void> {
           pendingUpdate?.requestType === "post" ||
           pendingUpdate?.requestType === "patch"
         ) {
-          await pendingFriendsTable.update(id, { name, age: +age });
+          await pendingFriendsTable.update(id, {
+            name,
+            age: +age,
+            time: Date.now(),
+          });
         } else if (pendingUpdate?.requestType === "delete") {
           await pendingFriendsTable.update(id, {
             name,
             age: +age,
             requestType: "patch",
+            time: Date.now(),
           });
         } else {
           await pendingFriendsTable.add({
@@ -112,7 +117,13 @@ function useDeleteFriend(): (friend: Friend) => Promise<void> {
         if (pendingUpdate?.requestType === "post") {
           await pendingFriendsTable.delete(id);
         } else if (pendingUpdate?.requestType === "patch") {
-          await pendingFriendsTable.update(id, { requestType: "delete" });
+          const { name, age } = (await friendsTable.get(id)) as Friend;
+          await pendingFriendsTable.update(id, {
+            name,
+            age,
+            requestType: "delete",
+            time: Date.now(),
+          });
         } else if (!pendingUpdate) {
           await pendingFriendsTable.add({
             id,
