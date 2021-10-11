@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import { AddFriendModal } from "./friend/add-friend-modal";
 import { FriendList } from "./friend/friend-list";
+import { FriendModal } from "./friend/friend-modal";
 import { PendingFriendList } from "./friend/pending-friend-list";
 import { useOnlineStatus } from "./useOnlineStatus";
 
@@ -11,13 +11,13 @@ function App() {
 
   return (
     <div id="app" className={onlineStatus ? "online" : "offline"}>
-      <button onClick={() => setOpen(true)}>Add Friend</button>
+      <div id="scrollable">
+        <button onClick={() => setOpen(true)}>Add Friend</button>
+        <FriendModal open={open} onClose={() => setOpen(false)} />
 
-      <PendingFriendList />
-
-      <FriendList />
-
-      <AddFriendModal open={open} onClose={() => setOpen(false)} />
+        <PendingFriendList />
+        <FriendList />
+      </div>
     </div>
   );
 }
