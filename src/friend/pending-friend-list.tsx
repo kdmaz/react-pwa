@@ -1,4 +1,5 @@
 import { pendingFriendsTable, useLiveQuery } from "../db";
+import "./pending-friend-list.css";
 
 function PendingFriendList() {
   const pendingFriends = useLiveQuery(() => pendingFriendsTable.toArray(), []);
@@ -12,7 +13,7 @@ function PendingFriendList() {
   };
 
   return (
-    <>
+    <div className="pending">
       <h2>Pending</h2>
       <ul>
         {pendingFriends.map(({ id, name, age }) => (
@@ -25,7 +26,7 @@ function PendingFriendList() {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }
 

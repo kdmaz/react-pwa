@@ -1,0 +1,8 @@
+.pending {
+  background-color: red;
+  color: white;
+  padding: 5px;
+  padding-left: 30px;
+  margin-top: 10px;
+  border-radius: 15px;
+}
