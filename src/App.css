@@ -1,0 +1,13 @@
+#app {
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+}
+
+#app.online {
+  border: 15px solid rgb(139, 219, 20);
+}
+
+#app.offline {
+  border: 15px solid red;
+}
