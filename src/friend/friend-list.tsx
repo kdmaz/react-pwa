@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { friendsTable, useLiveQuery } from "../db";
-import { useDeleteFriend, useGetFriends } from "./friend-api";
 import "./friend-list.css";
 import { FriendModal } from "./friend-modal";
 import { Friend } from "./friend.interface";
+import { useDeleteFriend, useGetFriends } from "./use-friend-api";
+import { useFriendList } from "./use-friend-list";
 
 function FriendList() {
   const getFriends = useGetFriends();
   const deleteFriend = useDeleteFriend();
-  const friends = useLiveQuery(() => friendsTable.toArray(), []);
+  const friends = useFriendList();
   const [state, setState] = useState<{
     open: boolean;
     friend: Friend | undefined;

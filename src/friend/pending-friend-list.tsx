@@ -12,6 +12,11 @@ function PendingFriendList() {
     await pendingFriendsTable.delete(id);
   };
 
+  const getDateAndTime = (time: number): string => {
+    const date = new Date(time);
+    return `${date.toLocaleTimeString()} ${date.toLocaleDateString()}`;
+  };
+
   return (
     <div className="pending">
       <h2>Pending</h2>
@@ -23,7 +28,7 @@ function PendingFriendList() {
               <div>name: {name}</div>
               <div>age: {age}</div>
               <div>request type: {requestType}</div>
-              <div>time: {new Date(time).toISOString()}</div>
+              <div>time: {getDateAndTime(time)}</div>
               <div>
                 <button onClick={() => handleDelete(id)}>Delete</button>
               </div>

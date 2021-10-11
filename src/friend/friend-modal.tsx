@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Modal } from "../modal";
-import { useAddFriend, useUpdateFriend } from "./friend-api";
 import { Friend } from "./friend.interface";
+import { useAddFriend, useUpdateFriend } from "./use-friend-api";
 
 interface Props {
   friend?: Friend;
