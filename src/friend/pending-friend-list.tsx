@@ -8,7 +8,7 @@ function PendingFriendList() {
     return null;
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     pendingFriendsTable.delete(id);
   };
 
@@ -16,12 +16,13 @@ function PendingFriendList() {
     <div className="pending">
       <h2>Pending</h2>
       <ul>
-        {pendingFriends.map(({ id, name, age }) => (
+        {pendingFriends.map(({ id, name, age, requestType }) => (
           <li key={id}>
             <div>name: {name}</div>
             <div>age: {age}</div>
+            <div>request type: {requestType}</div>
             <div>
-              <button onClick={() => handleDelete(id as number)}>Delete</button>
+              <button onClick={() => handleDelete(id)}>Delete</button>
             </div>
           </li>
         ))}

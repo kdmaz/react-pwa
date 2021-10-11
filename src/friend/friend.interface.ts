@@ -1,9 +1,12 @@
 export interface Friend {
-  id?: number;
+  id: string;
   name: string;
   age: number;
 }
 
-export interface PendingFriend extends Friend {
+export interface PendingFriend {
+  id: string;
+  name: string;
+  age: number;
   requestType: "get" | "post" | "patch" | "delete";
 }
