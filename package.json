@@ -19,6 +19,7 @@
     "react-scripts": "4.0.3",
     "serve": "^12.0.1",
     "typescript": "^4.4.3",
+    "uuid": "^8.3.2",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.4",
     "workbox-broadcast-update": "^5.1.4",
@@ -59,7 +60,8 @@
     ]
   },
   "devDependencies": {
-    "@types/react-detect-offline": "^2.4.0"
+    "@types/react-detect-offline": "^2.4.0",
+    "@types/uuid": "^8.3.1"
   },
   "msw": {
     "workerDirectory": "public"
