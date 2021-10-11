@@ -8,6 +8,6 @@ export interface PendingFriend {
   id: string;
   name: string;
   age: number;
-  requestType: "get" | "post" | "patch" | "delete";
+  requestType: "post" | "patch" | "delete";
   time: number;
 }

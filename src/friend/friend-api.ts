@@ -45,7 +45,6 @@ function useAddFriend(): (friend: Friend) => Promise<void> {
           requestType: "post",
           time: Date.now(),
         });
-        await friendsTable.add({ id, name, age: +age });
       }
     },
     [onlineStatus]
@@ -69,8 +68,17 @@ function useUpdateFriend(): (friend: Friend) => Promise<void> {
         await friendsTable.update(id, friend);
       } else {
         let pendingUpdate = await pendingFriendsTable.get(id);
-        if (pendingUpdate?.requestType) {
+        if (
+          pendingUpdate?.requestType === "post" ||
+          pendingUpdate?.requestType === "patch"
+        ) {
           await pendingFriendsTable.update(id, { name, age: +age });
+        } else if (pendingUpdate?.requestType === "delete") {
+          await pendingFriendsTable.update(id, {
+            name,
+            age: +age,
+            requestType: "patch",
+          });
         } else {
           await pendingFriendsTable.add({
             id,
@@ -80,8 +88,6 @@ function useUpdateFriend(): (friend: Friend) => Promise<void> {
             time: Date.now(),
           });
         }
-
-        await friendsTable.update(id, { name, age: +age });
       }
     },
     [onlineStatus]
@@ -102,14 +108,20 @@ function useDeleteFriend(): (friend: Friend) => Promise<void> {
 
         await friendsTable.delete(id);
       } else {
-        await pendingFriendsTable.add({
-          id,
-          name,
-          age: +age,
-          requestType: "delete",
-          time: Date.now(),
-        });
-        await friendsTable.delete(id);
+        let pendingUpdate = await pendingFriendsTable.get(id);
+        if (pendingUpdate?.requestType === "post") {
+          await pendingFriendsTable.delete(id);
+        } else if (pendingUpdate?.requestType === "patch") {
+          await pendingFriendsTable.update(id, { requestType: "delete" });
+        } else if (!pendingUpdate) {
+          await pendingFriendsTable.add({
+            id,
+            name,
+            age: +age,
+            requestType: "delete",
+            time: Date.now(),
+          });
+        }
       }
     },
     [onlineStatus]
