@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Friend } from "./friend.interface";
+import { useFriends } from "./friend.provider";
 
 function FriendList() {
-  const [friends, setFriends] = useState<Friend[]>([]);
+  const { friends, setFriends } = useFriends();
 
   useEffect(() => {
     fetch("/api/friends")
@@ -10,7 +11,7 @@ function FriendList() {
       .then((data: { friends: Friend[] }) => {
         setFriends(data.friends);
       });
-  }, []);
+  }, [setFriends]);
 
   if (!friends || !friends.length) {
     return <h2>You have no friends ;_;</h2>;

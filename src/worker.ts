@@ -21,14 +21,16 @@ export const worker = setupWorker(
     return res(ctx.json({ friends }));
   }),
   rest.post("/api/friends", (req, res, ctx) => {
-    const friend: Friend = { id: currentId, ...(req.body as Friend) };
+    const { name, age } = JSON.parse(req.body as string) as Friend;
+    const friend: Friend = { id: currentId, name, age };
     friends.push(friend);
     currentId++;
     return res(ctx.json({ friend }));
   }),
   rest.patch("/api/friends/:id", (req, res, ctx) => {
     const id = +req.params.id;
-    const friend: Friend = { id, ...(req.body as Friend) };
+    const { name, age } = JSON.parse(req.body as string) as Friend;
+    const friend: Friend = { id, name, age };
     let index = friends.findIndex((friend) => friend.id === id);
     friends[index] = friend;
     return res(ctx.json({ friend }));

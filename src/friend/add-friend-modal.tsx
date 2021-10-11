@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { pendingFriendsTable } from "../db";
 import { Modal } from "../modal";
+import { useOnlineStatus } from "../useOnlineStatus";
+import { Friend } from "./friend.interface";
+import { useFriends } from "./friend.provider";
 
 interface Props {
   open: boolean;
@@ -8,6 +11,8 @@ interface Props {
 }
 
 function AddFriendModal({ onClose, open }: Props) {
+  const onlineStatus = useOnlineStatus();
+  const { friends, setFriends } = useFriends();
   const [name, setName] = useState<string>("");
   const [age, setAge] = useState<string>("");
 
@@ -31,13 +36,13 @@ function AddFriendModal({ onClose, open }: Props) {
     }
 
     // online
-    if (true) {
-      const newFriend = await fetch("/api/friends", {
+    if (onlineStatus) {
+      const { friend }: { friend: Friend } = await fetch("/api/friends", {
         method: "POST",
         body: JSON.stringify({ name, age: +age }),
-      });
+      }).then((res) => res.json());
 
-      // friendProvider setFriends -> newFriend
+      setFriends([...friends, friend]);
     } else {
       // offline
       await pendingFriendsTable.add({
@@ -54,25 +59,33 @@ function AddFriendModal({ onClose, open }: Props) {
     <Modal open={open} onClose={onCloseAddFriend}>
       <h2>Add Friend</h2>
       <div>
-        <label htmlFor="name">Name</label>
-        <input
-          name="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div>
+          <label htmlFor="name">Name</label>
+        </div>
+        <div>
+          <input
+            name="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
       </div>
 
       <div>
-        <label htmlFor="age">Age</label>
-        <input
-          name="age"
-          type="text"
-          value={age}
-          onChange={(e) => {
-            setAge(e.target.value);
-          }}
-        />
+        <div>
+          <label htmlFor="age">Age</label>
+        </div>
+        <div>
+          <input
+            name="age"
+            type="text"
+            value={age}
+            onChange={(e) => {
+              setAge(e.target.value);
+            }}
+          />
+        </div>
       </div>
 
       <div>
