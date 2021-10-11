@@ -9,4 +9,5 @@ export interface PendingFriend {
   name: string;
   age: number;
   requestType: "get" | "post" | "patch" | "delete";
+  time: number;
 }

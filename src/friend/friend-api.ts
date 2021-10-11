@@ -15,8 +15,8 @@ function useGetFriends(): () => Promise<void> {
         res.json()
       );
 
-      friendsTable.clear();
-      friendsTable.bulkAdd(friends);
+      await friendsTable.clear();
+      await friendsTable.bulkAdd(friends);
     }
   }, [onlineStatus]);
 
@@ -35,16 +35,17 @@ function useAddFriend(): (friend: Friend) => Promise<void> {
           headers: { "Content-Type": "application/json" },
         }).then((res) => res.json());
 
-        friendsTable.add(friend);
+        await friendsTable.add(friend);
       } else {
         const id = uuid();
-        pendingFriendsTable.add({
+        await pendingFriendsTable.add({
           id,
           name,
           age: +age,
           requestType: "post",
+          time: Date.now(),
         });
-        friendsTable.add(id as any);
+        await friendsTable.add({ id, name, age: +age });
       }
     },
     [onlineStatus]
@@ -65,7 +66,7 @@ function useUpdateFriend(): (friend: Friend) => Promise<void> {
           headers: { "Content-Type": "application/json" },
         }).then((res) => res.json());
 
-        friendsTable.update(id, friend);
+        await friendsTable.update(id, friend);
       } else {
         let pendingUpdate = await pendingFriendsTable.get(id);
         if (pendingUpdate?.requestType) {
@@ -76,6 +77,7 @@ function useUpdateFriend(): (friend: Friend) => Promise<void> {
             name,
             age: +age,
             requestType: "patch",
+            time: Date.now(),
           });
         }
 
@@ -98,15 +100,16 @@ function useDeleteFriend(): (friend: Friend) => Promise<void> {
           method: "DELETE",
         });
 
-        friendsTable.delete(id);
+        await friendsTable.delete(id);
       } else {
-        pendingFriendsTable.add({
+        await pendingFriendsTable.add({
           id,
           name,
           age: +age,
           requestType: "delete",
+          time: Date.now(),
         });
-        friendsTable.delete(id);
+        await friendsTable.delete(id);
       }
     },
     [onlineStatus]

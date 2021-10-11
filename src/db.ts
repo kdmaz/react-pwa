@@ -5,8 +5,8 @@ import { Friend, PendingFriend } from "./friend/friend.interface";
 const db = new Dexie("friendsDatabase");
 
 db.version(1).stores({
-  pendingFriends: "++order,id,name,age,requestType",
-  friends: "id,name,age",
+  pendingFriends: "id",
+  friends: "id",
 });
 
 const pendingFriendsTable = db.table<PendingFriend>("pendingFriends");
