@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useOnlineStatus } from "../useOnlineStatus";
 import {
   addFriend,
@@ -28,39 +29,48 @@ interface FriendApiAndStorageFunctions {
 function useFriendApiAndStorage(): FriendApiAndStorageFunctions {
   const onlineStatus = useOnlineStatus();
 
-  const getFriendsAndSyncDb = async () => {
+  const getFriendsAndSyncDb = useCallback(async () => {
     if (onlineStatus) {
       const friends = await getFriends();
       await getFriendsToDb(friends);
     }
-  };
+  }, [onlineStatus]);
 
-  const addFriendAndSyncDb = async (friend: Friend) => {
-    if (onlineStatus) {
-      const newFriend = await addFriend(friend);
-      await addFriendToDb(newFriend);
-    } else {
-      await addFriendToPending(friend);
-    }
-  };
+  const addFriendAndSyncDb = useCallback(
+    async (friend: Friend) => {
+      if (onlineStatus) {
+        const newFriend = await addFriend(friend);
+        await addFriendToDb(newFriend);
+      } else {
+        await addFriendToPending(friend);
+      }
+    },
+    [onlineStatus]
+  );
 
-  const updateFriendAndSyncDb = async (friend: Friend) => {
-    if (onlineStatus) {
-      const updatedFriend = await updateFriend(friend);
-      await updateFriendToDb(updatedFriend);
-    } else {
-      await updateFriendToPending(friend);
-    }
-  };
+  const updateFriendAndSyncDb = useCallback(
+    async (friend: Friend) => {
+      if (onlineStatus) {
+        const updatedFriend = await updateFriend(friend);
+        await updateFriendToDb(updatedFriend);
+      } else {
+        await updateFriendToPending(friend);
+      }
+    },
+    [onlineStatus]
+  );
 
-  const deleteFriendAndSyncDb = async (friend: Friend) => {
-    if (onlineStatus) {
-      const id = await deleteFriend(friend.id);
-      await deleteFriendToDb(id);
-    } else {
-      await deleteFriendToPending(friend);
-    }
-  };
+  const deleteFriendAndSyncDb = useCallback(
+    async (friend: Friend) => {
+      if (onlineStatus) {
+        const id = await deleteFriend(friend.id);
+        await deleteFriendToDb(id);
+      } else {
+        await deleteFriendToPending(friend);
+      }
+    },
+    [onlineStatus]
+  );
 
   return {
     getFriendsAndSyncDb,
