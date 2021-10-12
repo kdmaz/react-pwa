@@ -65,4 +65,13 @@ async function deleteFriendToPending({ id, name, age }: Friend): Promise<void> {
   }
 }
 
-export { addFriendToPending, updateFriendToPending, deleteFriendToPending };
+async function removePendingRequest(id: string): Promise<void> {
+  await pendingFriendsTable.delete(id);
+}
+
+export {
+  addFriendToPending,
+  updateFriendToPending,
+  deleteFriendToPending,
+  removePendingRequest,
+};

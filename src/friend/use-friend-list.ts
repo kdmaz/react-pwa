@@ -1,14 +1,14 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { validate } from "uuid";
 import { friendsTable, pendingFriendsTable } from "../db";
-import { Friend, PendingFriend } from "./friend.interface";
+import { Friend, PendingRequest } from "./friend.interface";
 
-function useFriendList(): (Friend | PendingFriend)[] {
+function useFriendList(): (Friend | PendingRequest)[] {
   const friends = useLiveQuery(() => friendsTable.toArray(), []);
   const pendingFriends = useLiveQuery(() => pendingFriendsTable.toArray(), []);
 
-  const newPendingFriends: PendingFriend[] = [];
-  const pendingFriendsMap: Record<string, PendingFriend> = {};
+  const newPendingFriends: PendingRequest[] = [];
+  const pendingFriendsMap: Record<string, PendingRequest> = {};
 
   for (let pendingFriend of pendingFriends ?? []) {
     if (validate(pendingFriend.id)) {
@@ -18,7 +18,7 @@ function useFriendList(): (Friend | PendingFriend)[] {
     }
   }
 
-  const displayFriends: (Friend | PendingFriend)[] = [...newPendingFriends];
+  const displayFriends: (Friend | PendingRequest)[] = [...newPendingFriends];
 
   for (let friend of friends ?? []) {
     const pendingChange = pendingFriendsMap[friend.id];

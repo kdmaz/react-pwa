@@ -4,7 +4,7 @@ export interface Friend {
   age: number;
 }
 
-export interface PendingFriend extends Friend {
+export interface PendingRequest extends Friend {
   requestType: "post" | "patch" | "delete";
   time: number;
 }

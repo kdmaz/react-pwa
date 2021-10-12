@@ -1,16 +1,17 @@
 import { pendingFriendsTable, useLiveQuery } from "../db";
+import { useOnlineStatus } from "../useOnlineStatus";
 import "./pending-friend-list.css";
+import { removePendingRequest } from "./pending-friend.storage";
+import { useSyncPendingRequests } from "./use-sync.api";
 
 function PendingFriendList() {
+  const { syncPendingRequests } = useSyncPendingRequests();
+  const onlineStatus = useOnlineStatus();
   const pendingFriends = useLiveQuery(() => pendingFriendsTable.toArray(), []);
 
   if (!pendingFriends || !pendingFriends.length) {
     return null;
   }
-
-  const handleDelete = async (id: string) => {
-    await pendingFriendsTable.delete(id);
-  };
 
   const getDateAndTime = (time: number): string => {
     const date = new Date(time);
@@ -19,6 +20,11 @@ function PendingFriendList() {
 
   return (
     <div className="pending">
+      {onlineStatus && (
+        <button onClick={() => syncPendingRequests(pendingFriends)}>
+          Sync To Server
+        </button>
+      )}
       <h2>Pending</h2>
       <ul>
         {pendingFriends
@@ -30,7 +36,7 @@ function PendingFriendList() {
               <div>request type: {requestType}</div>
               <div>time: {getDateAndTime(time)}</div>
               <div>
-                <button onClick={() => handleDelete(id)}>Delete</button>
+                <button onClick={() => removePendingRequest(id)}>Delete</button>
               </div>
             </li>
           ))}
