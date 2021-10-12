@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import "./friend-list.css";
 import { FriendModal } from "./friend-modal";
 import { Friend } from "./friend.interface";
-import { useDeleteFriend, useGetFriends } from "./use-friend-api";
+import { useFriendApiAndStorage } from "./use-friend-api-and-storage";
 import { useFriendList } from "./use-friend-list";
 
 function FriendList() {
-  const getFriends = useGetFriends();
-  const deleteFriend = useDeleteFriend();
+  const { getFriendsAndSyncDb, deleteFriendAndSyncDb } =
+    useFriendApiAndStorage();
   const friends = useFriendList();
   const [state, setState] = useState<{
     open: boolean;
@@ -23,17 +23,17 @@ function FriendList() {
 
   useEffect(() => {
     setStatus("getting");
-    getFriends().then(() => setStatus("idle"));
-  }, [getFriends]);
+    getFriendsAndSyncDb().then(() => setStatus("idle"));
+  }, [getFriendsAndSyncDb]);
 
   useEffect(() => {
     if (isDeleting && id) {
-      deleteFriend(friend).then(() => {
+      deleteFriendAndSyncDb(friend).then(() => {
         setFriend(undefined);
         setStatus("idle");
       });
     }
-  }, [id, isDeleting, deleteFriend, friend]);
+  }, [id, isDeleting, deleteFriendAndSyncDb, friend]);
 
   function handleEditFriend(friend: Friend): void {
     setState({ open: true, friend });

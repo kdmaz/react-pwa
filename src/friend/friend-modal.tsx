@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Modal } from "../modal";
 import { Friend } from "./friend.interface";
-import { useAddFriend, useUpdateFriend } from "./use-friend-api";
+import { useFriendApiAndStorage } from "./use-friend-api-and-storage";
 
 interface Props {
   friend?: Friend;
@@ -10,8 +10,8 @@ interface Props {
 }
 
 function FriendModal({ onClose, open, friend }: Props) {
-  const addFriend = useAddFriend();
-  const updateFriend = useUpdateFriend();
+  const { addFriendAndSyncDb, updateFriendAndSyncDb } =
+    useFriendApiAndStorage();
 
   const [name, setName] = useState<string>(friend?.name ?? "");
   const [age, setAge] = useState<string>(`${friend?.age ?? ""}`);
@@ -33,25 +33,25 @@ function FriendModal({ onClose, open, friend }: Props) {
 
   useEffect(() => {
     if (isAdding) {
-      addFriend({ id: "", name, age: +age })
+      addFriendAndSyncDb({ id: "", name, age: +age })
         .then(() => {
           setStatus("idle");
           onCloseFriendModal();
         })
         .catch(() => setStatus("error"));
     }
-  }, [addFriend, age, isAdding, name, onCloseFriendModal]);
+  }, [addFriendAndSyncDb, age, isAdding, name, onCloseFriendModal]);
 
   useEffect(() => {
     if (isEditing) {
-      updateFriend({ id, name, age: +age })
+      updateFriendAndSyncDb({ id, name, age: +age })
         .then(() => {
           setStatus("idle");
           onCloseFriendModal();
         })
         .catch(() => setStatus("error"));
     }
-  }, [age, id, isEditing, name, onCloseFriendModal, updateFriend]);
+  }, [age, id, isEditing, name, onCloseFriendModal, updateFriendAndSyncDb]);
 
   const isInvalid = () => {
     return !name || !age || isNaN(+age);
