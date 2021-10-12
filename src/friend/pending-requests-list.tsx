@@ -1,15 +1,18 @@
-import { pendingFriendsTable, useLiveQuery } from "../db";
+import { pendingRequestsTable, useLiveQuery } from "../db";
 import { useOnlineStatus } from "../useOnlineStatus";
-import "./pending-friend-list.css";
-import { removePendingRequest } from "./pending-friend.storage";
+import "./pending-requests-list.css";
+import { removePendingRequest } from "./pending-requests.storage";
 import { useSyncPendingRequests } from "./use-sync.api";
 
-function PendingFriendList() {
+function PendingRequestsList() {
   const { syncPendingRequests } = useSyncPendingRequests();
   const onlineStatus = useOnlineStatus();
-  const pendingFriends = useLiveQuery(() => pendingFriendsTable.toArray(), []);
+  const pendingRequests = useLiveQuery(
+    () => pendingRequestsTable.toArray(),
+    []
+  );
 
-  if (!pendingFriends || !pendingFriends.length) {
+  if (!pendingRequests || !pendingRequests.length) {
     return null;
   }
 
@@ -21,13 +24,13 @@ function PendingFriendList() {
   return (
     <div className="pending">
       {onlineStatus && (
-        <button onClick={() => syncPendingRequests(pendingFriends)}>
+        <button onClick={() => syncPendingRequests(pendingRequests)}>
           Sync To Server
         </button>
       )}
       <h2>Pending</h2>
       <ul>
-        {pendingFriends
+        {pendingRequests
           .sort((a, b) => a?.time - b?.time)
           .map(({ id, name, age, requestType, time }) => (
             <li key={id}>
@@ -45,4 +48,4 @@ function PendingFriendList() {
   );
 }
 
-export { PendingFriendList };
+export { PendingRequestsList };

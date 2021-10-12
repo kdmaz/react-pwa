@@ -1,10 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { friendsTable, pendingFriendsTable } from "../db";
+import { friendsTable, pendingRequestsTable } from "../db";
 import { Friend } from "./friend.interface";
 
 async function addFriendToPending({ name, age }: Friend): Promise<void> {
   const id = uuid();
-  await pendingFriendsTable.add({
+  await pendingRequestsTable.add({
     id,
     name,
     age: +age,
@@ -14,25 +14,25 @@ async function addFriendToPending({ name, age }: Friend): Promise<void> {
 }
 
 async function updateFriendToPending({ id, name, age }: Friend): Promise<void> {
-  let pendingUpdate = await pendingFriendsTable.get(id);
+  let pendingUpdate = await pendingRequestsTable.get(id);
   if (
     pendingUpdate?.requestType === "post" ||
     pendingUpdate?.requestType === "patch"
   ) {
-    await pendingFriendsTable.update(id, {
+    await pendingRequestsTable.update(id, {
       name,
       age: +age,
       time: Date.now(),
     });
   } else if (pendingUpdate?.requestType === "delete") {
-    await pendingFriendsTable.update(id, {
+    await pendingRequestsTable.update(id, {
       name,
       age: +age,
       requestType: "patch",
       time: Date.now(),
     });
   } else {
-    await pendingFriendsTable.add({
+    await pendingRequestsTable.add({
       id,
       name,
       age: +age,
@@ -43,19 +43,19 @@ async function updateFriendToPending({ id, name, age }: Friend): Promise<void> {
 }
 
 async function deleteFriendToPending({ id, name, age }: Friend): Promise<void> {
-  let pendingUpdate = await pendingFriendsTable.get(id);
+  let pendingUpdate = await pendingRequestsTable.get(id);
   if (pendingUpdate?.requestType === "post") {
-    await pendingFriendsTable.delete(id);
+    await pendingRequestsTable.delete(id);
   } else if (pendingUpdate?.requestType === "patch") {
     const { name, age } = (await friendsTable.get(id)) as Friend;
-    await pendingFriendsTable.update(id, {
+    await pendingRequestsTable.update(id, {
       name,
       age,
       requestType: "delete",
       time: Date.now(),
     });
   } else if (!pendingUpdate) {
-    await pendingFriendsTable.add({
+    await pendingRequestsTable.add({
       id,
       name,
       age: +age,
@@ -66,7 +66,7 @@ async function deleteFriendToPending({ id, name, age }: Friend): Promise<void> {
 }
 
 async function removePendingRequest(id: string): Promise<void> {
-  await pendingFriendsTable.delete(id);
+  await pendingRequestsTable.delete(id);
 }
 
 export {

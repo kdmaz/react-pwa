@@ -5,11 +5,11 @@ import { Friend, PendingRequest } from "./friend/friend.interface";
 const db = new Dexie("friendsDatabase");
 
 db.version(1).stores({
-  pendingFriends: "id",
+  pendingRequests: "id",
   friends: "id",
 });
 
-const pendingFriendsTable = db.table<PendingRequest>("pendingFriends");
+const pendingRequestsTable = db.table<PendingRequest>("pendingRequests");
 const friendsTable = db.table<Friend>("friends");
 
-export { friendsTable, pendingFriendsTable, useLiveQuery };
+export { friendsTable, pendingRequestsTable, useLiveQuery };

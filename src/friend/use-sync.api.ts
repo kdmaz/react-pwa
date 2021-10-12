@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { PendingRequest } from "./friend.interface";
-import { removePendingRequest } from "./pending-friend.storage";
+import { removePendingRequest } from "./pending-requests.storage";
 import { useFriendApiAndStorage } from "./use-friend-api-and-storage";
 
 interface SyncPendingRequestFunctions {

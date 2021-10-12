@@ -17,7 +17,7 @@ import {
   addFriendToPending,
   deleteFriendToPending,
   updateFriendToPending,
-} from "./pending-friend.storage";
+} from "./pending-requests.storage";
 
 interface FriendApiAndStorageFunctions {
   getFriendsAndSyncDb: () => Promise<void>;

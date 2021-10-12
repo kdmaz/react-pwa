@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import { FriendList } from "./friend/friend-list";
 import { FriendModal } from "./friend/friend-modal";
-import { PendingFriendList } from "./friend/pending-friend-list";
+import { PendingRequestsList } from "./friend/pending-requests-list";
 import { useOnlineStatus } from "./useOnlineStatus";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
         <button onClick={() => setOpen(true)}>Add Friend</button>
         <FriendModal open={open} onClose={() => setOpen(false)} />
 
-        <PendingFriendList />
+        <PendingRequestsList />
         <FriendList />
       </div>
     </div>

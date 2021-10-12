@@ -1,27 +1,30 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { validate } from "uuid";
-import { friendsTable, pendingFriendsTable } from "../db";
+import { friendsTable, pendingRequestsTable } from "../db";
 import { Friend, PendingRequest } from "./friend.interface";
 
 function useFriendList(): (Friend | PendingRequest)[] {
   const friends = useLiveQuery(() => friendsTable.toArray(), []);
-  const pendingFriends = useLiveQuery(() => pendingFriendsTable.toArray(), []);
+  const pendingRequests = useLiveQuery(
+    () => pendingRequestsTable.toArray(),
+    []
+  );
 
-  const newPendingFriends: PendingRequest[] = [];
-  const pendingFriendsMap: Record<string, PendingRequest> = {};
+  const newPendingRequests: PendingRequest[] = [];
+  const pendingRequestsMap: Record<string, PendingRequest> = {};
 
-  for (let pendingFriend of pendingFriends ?? []) {
-    if (validate(pendingFriend.id)) {
-      newPendingFriends.push(pendingFriend);
+  for (let pendingRequest of pendingRequests ?? []) {
+    if (validate(pendingRequest.id)) {
+      newPendingRequests.push(pendingRequest);
     } else {
-      pendingFriendsMap[pendingFriend.id] = pendingFriend;
+      pendingRequestsMap[pendingRequest.id] = pendingRequest;
     }
   }
 
-  const displayFriends: (Friend | PendingRequest)[] = [...newPendingFriends];
+  const displayFriends: (Friend | PendingRequest)[] = [...newPendingRequests];
 
   for (let friend of friends ?? []) {
-    const pendingChange = pendingFriendsMap[friend.id];
+    const pendingChange = pendingRequestsMap[friend.id];
 
     if (!pendingChange) {
       displayFriends.push(friend);
